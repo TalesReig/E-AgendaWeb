@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2017",                                 
+    "module": "es6",                          
+    "rootDir": "./src",                                 
+    "outDir": "./dist",                                  
+    "forceConsistentCasingInFileNames": true,            
+    "strict": true,        
+    "strictPropertyInitialization": false,                              
+    "skipLibCheck": true                                 
+  }
+}

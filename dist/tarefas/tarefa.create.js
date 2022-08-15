@@ -13,7 +13,9 @@ class TarefaPaginaCadastro {
     gravarRegistro() {
         this.rdbPrioridade = document.querySelector('input[type="radio"]:checked');
         const prioridade = this.rdbPrioridade.value;
-        const novaTareda = new Tarefa(this.txtDescricao.value, prioridade);
+        const novaTarefa = new Tarefa(this.txtDescricao.value, prioridade);
+        this.repositorioTarefas.inserir(novaTarefa);
+        window.location.href = "tarefa.list.html";
     }
 }
 new TarefaPaginaCadastro(new TarefaRepositoryLocalStorage());

@@ -25,7 +25,11 @@ class TarefaPaginaCadastro implements IPaginaHTML, IpaginaFormulario {
 
     const prioridade = this.rdbPrioridade.value as Prioridade;
 
-    const novaTareda = new Tarefa(this.txtDescricao.value, prioridade)
+    const novaTarefa = new Tarefa(this.txtDescricao.value, prioridade);
+
+    this.repositorioTarefas.inserir(novaTarefa);
+
+    window.location.href = "tarefa.list.html";
   }
 }
 

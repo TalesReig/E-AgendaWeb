@@ -1,7 +1,7 @@
-import { Prioridade } from "./prioridade.enum.js";
-import { Tarefa } from "./tarefa.model.js";
+import { TarefaRepositoryLocalStorage } from "./tarefa.repository.local-storage.js";
 class TarefaPaginaListagem {
-    constructor() {
+    constructor(repositorioTarefas) {
+        this.repositorioTarefas = repositorioTarefas;
         this.configurarElementos();
         this.atualizarTabela();
     }
@@ -9,10 +9,7 @@ class TarefaPaginaListagem {
         this.tabela = document.getElementById("tabela");
     }
     atualizarTabela() {
-        const tarefas = [
-            new Tarefa("eAgenda-Web", Prioridade.Alta),
-            new Tarefa("Assistir Aulas", Prioridade.Alta)
-        ];
+        const tarefas = this.repositorioTarefas.selecionarTodos();
         let corpoTabela = this.tabela.getElementsByTagName("tbody")[0];
         tarefas.forEach(tarefa => {
             const novaLinha = corpoTabela.insertRow();
@@ -23,4 +20,4 @@ class TarefaPaginaListagem {
         });
     }
 }
-new TarefaPaginaListagem();
+new TarefaPaginaListagem(new TarefaRepositoryLocalStorage);

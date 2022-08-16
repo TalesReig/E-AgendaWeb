@@ -1,3 +1,4 @@
+import { Guid } from "../shared/guid.model.js";
 import { IRepositorioSerializavel } from "../shared/repositorio-serializavel.interface.js";
 import { IRepositorio } from "../shared/repositorio.interface.js";
 import { Tarefa } from "./tarefa.model.js";
@@ -22,7 +23,23 @@ export class TarefaRepositoryLocalStorage implements IRepositorio<Tarefa>, IRepo
 
   //----------------------------------------------------------
   inserir(registro: Tarefa): void {
+    registro.id = new Guid().gerarNovoId();
     this.tarefas.push(registro);
+    this.gravar();
+  }
+
+  //----------------------------------------------------------
+  public editar(id: string, registroEditado: Tarefa): void {
+    const indexSelecionado = this.tarefas.findIndex(x => x.id === id);
+
+    this.tarefas[indexSelecionado] = {
+      id: id,
+      descricao: registroEditado.descricao,
+      dataCriacao: registroEditado.dataCriacao,
+      dataConclusao: registroEditado.dataConclusao,
+      prioridade: registroEditado.prioridade,
+    }
+
     this.gravar();
   }
 
@@ -34,5 +51,10 @@ export class TarefaRepositoryLocalStorage implements IRepositorio<Tarefa>, IRepo
       return[];
 
     return JSON.parse(dados);
+  }
+
+  //----------------------------------------------------------
+  public selecionarPorId(id: string): Tarefa | undefined{
+    return this.tarefas.find(x => x.id === id);
   }
 }

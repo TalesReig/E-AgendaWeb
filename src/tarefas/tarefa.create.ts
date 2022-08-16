@@ -10,8 +10,20 @@ class TarefaPaginaCadastro implements IPaginaHTML, IpaginaFormulario {
   private btnSalvar: HTMLButtonElement;
   private rdbPrioridade: HTMLInputElement;
   
-  constructor (private repositorioTarefas: IRepositorio<Tarefa>) {
+  private idSelecionado: string;
+
+  constructor (private repositorioTarefas: IRepositorio<Tarefa>, id?:string) {
     this.configurarElementos();
+
+    if(id){
+      this.idSelecionado = id;
+
+      const tarefaSelecionada = this.repositorioTarefas.selecionarPorId(id);
+      
+      if(tarefaSelecionada)
+        this.preencherFormulario(tarefaSelecionada);
+
+    }
   }
 
   configurarElementos(): void {
@@ -21,16 +33,56 @@ class TarefaPaginaCadastro implements IPaginaHTML, IpaginaFormulario {
   }
 
   gravarRegistro(): void {
-    this.rdbPrioridade = document.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+    const tarefa = this.obterDadosFormulario();
 
-    const prioridade = this.rdbPrioridade.value as Prioridade;
-
-    const novaTarefa = new Tarefa(this.txtDescricao.value, prioridade);
-
-    this.repositorioTarefas.inserir(novaTarefa);
+    if(!this.idSelecionado)
+      this.repositorioTarefas.inserir(tarefa);
+    else
+      this.repositorioTarefas.editar(tarefa.id, tarefa);
 
     window.location.href = "tarefa.list.html";
   }
+
+  private preencherFormulario(tarefaSelecionada: Tarefa){
+    this.txtDescricao.value = tarefaSelecionada.descricao;
+
+    switch(tarefaSelecionada.prioridade){
+      case Prioridade.Baixa:
+        this.rdbPrioridade = document.querySelector("input[value='Baixa']") as HTMLInputElement;
+        break;
+      case Prioridade.Baixa:
+        this.rdbPrioridade = document.querySelector("input[value='Média']") as HTMLInputElement;
+        break;
+      case Prioridade.Baixa:
+        this.rdbPrioridade = document.querySelector("input[value='Alta']") as HTMLInputElement;
+        break;
+    }
+
+    this.rdbPrioridade.checked = true;
+  }
+
+  private obterDadosFormulario():Tarefa{
+    const descricao = this.txtDescricao.value;
+    const prioridade = this.obterPrioridqadeSelecionada();
+
+    let tarefa = null;
+    if(!this.idSelecionado)
+      tarefa = new Tarefa(descricao, prioridade);
+    else
+      tarefa = new Tarefa(descricao, prioridade, this.idSelecionado);
+
+    return tarefa;
+  }
+
+  private obterPrioridqadeSelecionada(): Prioridade{
+    const rdbPrioridade = document.querySelector('input[type="radio"]:checked') as HTMLInputElement;
+
+    return rdbPrioridade.value as Prioridade;
+  }
 }
 
-new TarefaPaginaCadastro(new TarefaRepositoryLocalStorage());
+const params = new URLSearchParams(window.location.search);
+
+const id = params.get("id") as string; 
+
+new TarefaPaginaCadastro(new TarefaRepositoryLocalStorage(), id);

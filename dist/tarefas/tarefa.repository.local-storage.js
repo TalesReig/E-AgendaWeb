@@ -1,3 +1,4 @@
+import { Guid } from "../shared/guid.model.js";
 export class TarefaRepositoryLocalStorage {
     //----------------------------------------------------------
     constructor() {
@@ -11,7 +12,20 @@ export class TarefaRepositoryLocalStorage {
     }
     //----------------------------------------------------------
     inserir(registro) {
+        registro.id = new Guid().gerarNovoId();
         this.tarefas.push(registro);
+        this.gravar();
+    }
+    //----------------------------------------------------------
+    editar(id, registroEditado) {
+        const indexSelecionado = this.tarefas.findIndex(x => x.id === id);
+        this.tarefas[indexSelecionado] = {
+            id: id,
+            descricao: registroEditado.descricao,
+            dataCriacao: registroEditado.dataCriacao,
+            dataConclusao: registroEditado.dataConclusao,
+            prioridade: registroEditado.prioridade,
+        };
         this.gravar();
     }
     //----------------------------------------------------------
@@ -20,5 +34,9 @@ export class TarefaRepositoryLocalStorage {
         if (!dados)
             return [];
         return JSON.parse(dados);
+    }
+    //----------------------------------------------------------
+    selecionarPorId(id) {
+        return this.tarefas.find(x => x.id === id);
     }
 }

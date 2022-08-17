@@ -5,7 +5,7 @@ import { Tarefa } from "./tarefa.model.js";
 
 export class TarefaRepositoryLocalStorage implements IRepositorio<Tarefa>, IRepositorioSerializavel{
   private readonly localStorage: Storage;
-  private readonly tarefas: Tarefa[];
+  private tarefas: Tarefa[];
 
   //----------------------------------------------------------
   constructor() {
@@ -39,6 +39,13 @@ export class TarefaRepositoryLocalStorage implements IRepositorio<Tarefa>, IRepo
       dataConclusao: registroEditado.dataConclusao,
       prioridade: registroEditado.prioridade,
     }
+
+    this.gravar();
+  }
+
+  //----------------------------------------------------------
+  public excluir(id: string): void {
+    this.tarefas = this.tarefas.filter(x => x.id !== id);
 
     this.gravar();
   }

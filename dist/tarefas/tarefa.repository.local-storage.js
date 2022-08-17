@@ -29,6 +29,11 @@ export class TarefaRepositoryLocalStorage {
         this.gravar();
     }
     //----------------------------------------------------------
+    excluir(id) {
+        this.tarefas = this.tarefas.filter(x => x.id !== id);
+        this.gravar();
+    }
+    //----------------------------------------------------------
     selecionarTodos() {
         const dados = this.localStorage.getItem("tarefas");
         if (!dados)

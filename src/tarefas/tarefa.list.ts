@@ -37,13 +37,26 @@ class TarefaPaginaListagem implements IPaginaHTML, IPaginaListagem{
       btnEditar.className = "btn btn-warning";
 
       btnEditar.addEventListener("click", () =>{
-        const idSelecionado = novaLinha.cells[0].innerText;
+        const idSelecionado = tarefa.id;
 
-        window.location.href = `tarefa.create.html?id=${idSelecionado}`
+        window.location.href = `tarefa.create.html?id=${idSelecionado}`;
       })
 
       celulaBotoes.appendChild(btnEditar);
 
+      const btnExcluir = document.createElement("a");
+      btnExcluir.innerText = "Excluir";
+      btnExcluir.className = "btn btn-warning ms-2";
+
+      btnExcluir.addEventListener("click", () =>{
+        const idSelecionado = tarefa.id;
+        this.repositorioTarefas.excluir(idSelecionado);
+
+        window.location.reload();
+      })
+
+      celulaBotoes.appendChild(btnEditar);
+      celulaBotoes.appendChild(btnExcluir);
     })
   }
 }
